@@ -12,13 +12,13 @@
 using namespace std;
 
 const double xi = 1.0;
-// M_1_SQRTPI = 1/sqrt(pi)
 
 ////////////////////////////////////////////////////////////////////////////////
 double h(int Z, double a, double b, double r)
 {
   double a2r2 = a*a*r*r;
-  return -Z*r*erf(a*r) - xi*Z/(a*sqrt(M_PI)) * exp(-a2r2)
+  const double inv_spi = 1.0/sqrt(M_PI);
+  return -Z*r*erf(a*r) - xi*Z*inv_spi/a * exp(-a2r2)
          + b*r*r*exp(-a2r2);
 }
 
@@ -26,7 +26,8 @@ double h(int Z, double a, double b, double r)
 double hp(int Z, double a, double b, double r)
 {
   double a2r2 = a*a*r*r;
-  return -Z*erf(a*r) - 2.0*(a*Z*r/sqrt(M_PI)) * (1.0 - xi) * exp(-a2r2)
+  const double inv_spi = 1.0/sqrt(M_PI);
+  return -Z*erf(a*r) + 2.0*a*Z*r*inv_spi * (xi - 1.0) * exp(-a2r2)
          + (2.0*b*r*(1.0-a2r2)) * exp(-a2r2);
 }
 
@@ -34,7 +35,8 @@ double hp(int Z, double a, double b, double r)
 double hpp(int Z, double a, double b, double r)
 {
   double a2r2 = a*a*r*r;
-  return   -2*Z*(a/sqrt(M_PI)) * ( 2.0 + 2.0*a2r2*(xi-1.0) -xi ) * exp(-a2r2)
+  const double inv_spi = 1.0/sqrt(M_PI);
+  return   -2*Z*a*inv_spi * ( 2.0 + 2.0*a2r2*(xi-1.0) - xi ) * exp(-a2r2)
          + (2.0*b*(1.0-5.0*a2r2+2.0*a2r2*a2r2)) * exp(-a2r2);
 }
 
@@ -49,7 +51,8 @@ double v(int Z, double a, double b, double r)
 {
   if ( r == 0.0 )
   {
-    return -0.5*Z*Z + 3.0*a*Z/sqrt(M_PI) * (xi - 2.0) + 3.0*b;
+    const double inv_spi = 1.0/sqrt(M_PI);
+    return -0.5*Z*Z + 3.0*a*Z*inv_spi * (xi - 2.0) + 3.0*b;
   }
   else
   {
