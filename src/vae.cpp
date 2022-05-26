@@ -11,32 +11,31 @@
 #include <iostream>
 using namespace std;
 
-enum h_type { F, G, H, HC };
-h_type ht = H;
+const double xi = 1.0;
+// M_1_SQRTPI = 1/sqrt(pi)
 
 ////////////////////////////////////////////////////////////////////////////////
 double h(int Z, double a, double b, double r)
 {
   double a2r2 = a*a*r*r;
-  if ( ht == H )
-    return -Z*r*erf(a*r) - Z*exp(-a2r2)/(a*sqrt(M_PI)) + b*r*r*exp(-a2r2);
+  return -Z*r*erf(a*r) - xi*Z/(a*sqrt(M_PI)) * exp(-a2r2)
+         + b*r*r*exp(-a2r2);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 double hp(int Z, double a, double b, double r)
 {
   double a2r2 = a*a*r*r;
-  if ( ht == H )
-    return -Z*erf(a*r) + (2.0*b*r*(1.0-a2r2))*exp(-a2r2);
+  return -Z*erf(a*r) - 2.0*(a*Z*r/sqrt(M_PI)) * (1.0 - xi) * exp(-a2r2)
+         + (2.0*b*r*(1.0-a2r2)) * exp(-a2r2);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 double hpp(int Z, double a, double b, double r)
 {
   double a2r2 = a*a*r*r;
-  if ( ht == H )
-    return -Z*2*a/sqrt(M_PI)*exp(-a2r2) +
-         (2.0*b*(1.0-5.0*a2r2+2.0*a2r2*a2r2))*exp(-a2r2);
+  return   -2*Z*(a/sqrt(M_PI)) * ( 2.0 + 2.0*a2r2*(xi-1.0) -xi ) * exp(-a2r2)
+         + (2.0*b*(1.0-5.0*a2r2+2.0*a2r2*a2r2)) * exp(-a2r2);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -50,8 +49,7 @@ double v(int Z, double a, double b, double r)
 {
   if ( r == 0.0 )
   {
-    if ( ht == H )
-      return -0.5*Z*Z - 3.0*a*Z/sqrt(M_PI) + 3.0*b;
+    return -0.5*Z*Z + 3.0*a*Z/sqrt(M_PI) * (xi - 2.0) + 3.0*b;
   }
   else
   {
