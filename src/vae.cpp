@@ -11,25 +11,31 @@
 #include <iostream>
 using namespace std;
 
+enum h_type { F, G, H, HC };
+h_type ht = H;
+
 ////////////////////////////////////////////////////////////////////////////////
 double h(int Z, double a, double b, double r)
 {
   double a2r2 = a*a*r*r;
-  return -Z*r*erf(a*r) - Z*exp(-a2r2)/(a*sqrt(M_PI)) + b*r*r*exp(-a2r2);
+  if ( ht == H )
+    return -Z*r*erf(a*r) - Z*exp(-a2r2)/(a*sqrt(M_PI)) + b*r*r*exp(-a2r2);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 double hp(int Z, double a, double b, double r)
 {
   double a2r2 = a*a*r*r;
-  return -Z*erf(a*r) + (2.0*b*r*(1.0-a2r2))*exp(-a2r2);
+  if ( ht == H )
+    return -Z*erf(a*r) + (2.0*b*r*(1.0-a2r2))*exp(-a2r2);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 double hpp(int Z, double a, double b, double r)
 {
   double a2r2 = a*a*r*r;
-  return -Z*2*a/sqrt(M_PI)*exp(-a2r2) + 
+  if ( ht == H )
+    return -Z*2*a/sqrt(M_PI)*exp(-a2r2) +
          (2.0*b*(1.0-5.0*a2r2+2.0*a2r2*a2r2))*exp(-a2r2);
 }
 
@@ -43,7 +49,10 @@ double phi(int Z, double a, double b, double r)
 double v(int Z, double a, double b, double r)
 {
   if ( r == 0.0 )
-    return -0.5*Z*Z - 3.0*a*Z/sqrt(M_PI) + 3.0*b;
+  {
+    if ( ht == H )
+      return -0.5*Z*Z - 3.0*a*Z/sqrt(M_PI) + 3.0*b;
+  }
   else
   {
     double hpval = hp(Z,a,b,r);
@@ -86,7 +95,7 @@ double vsetb(int Z, double a, double& b)
   const double epsilon = 1.e-6;
   while ( fabs(pseudo_norm2-exact_norm2) > epsilon )
   {
-    iter++; 
+    iter++;
     assert(iter<200);
     // compute normalization factor of phi(r)
     double sum = 0.0;
@@ -110,7 +119,7 @@ double vsetb(int Z, double a, double& b)
     if ( fabs(pseudo_norm2-exact_norm2) > epsilon )
       b = finder.next(b,pseudo_norm2-exact_norm2);
   }
-  cerr << "Pseudo norm2 in [1/Z,infinity]: " << pseudo_norm2 
+  cerr << "Pseudo norm2 in [1/Z,infinity]: " << pseudo_norm2
        << " b=" << b << endl;
   return fac;
 }

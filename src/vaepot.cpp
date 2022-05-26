@@ -4,7 +4,7 @@
 //
 // use: v Z a [b]
 //
-// If not provided, the parameter b is determined by enforcing 
+// If not provided, the parameter b is determined by enforcing
 // norm-conservation at r=1/Z
 //
 ////////////////////////////////////////////////////////////////////////////////

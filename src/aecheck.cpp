@@ -1,11 +1,11 @@
 ////////////////////////////////////////////////////////////////////////////////
 //
 //  aecheck.cpp
-//  Solve the non-interacting problem in a regularized potential 
+//  Solve the non-interacting problem in a regularized potential
 //
 //  Input: Z, a, [b optional], l, rmax, hZ
 //  Z: atomic number
-//  a,b, parameters of the regularized potential. If b is missing, 
+//  a,b, parameters of the regularized potential. If b is missing,
 //  it is calculated by enforcing norm-conservation of the 1s state at r=1/Z
 //  l: angular momentum
 //  hZ: produce of mesh spacing times Z (typical values: 0.0002 - 0.002)
@@ -81,7 +81,7 @@ int main(int argc, char **argv)
   for ( int i = 0; i < neig; i++ )
   {
     int n = i+l+1;
-    cout << " E_" << n << " = " << setw(15) << eig[i] 
+    cout << " E_" << n << " = " << setw(15) << eig[i]
          << "   " << setw(15) << -(0.5*Z*Z)/(n*n)
          << "   " << setw(15) << eig[i]+(0.5*Z*Z)/(n*n) << endl;
   }
