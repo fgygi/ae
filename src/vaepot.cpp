@@ -27,10 +27,11 @@ int main(int argc, char **argv)
   int Z = atoi(argv[1]);
   double a = atof(argv[2]);
   double b = 0.0;
+  double fac = 1.0;
   if ( argc == 4 )
     b = atof(argv[3]);
-
-  double fac = vsetb(Z,a,b);
+  else
+    fac = vsetb(Z,a,b);
 
   // output XML potential file
   const double dr = 0.002/Z;
