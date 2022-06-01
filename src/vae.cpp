@@ -79,8 +79,9 @@ double vsetb(int Z, double a, double& b)
   // compute norm of exact solution outside of r=1/Z
   // Normalized exact solution is Z^(3/2)/sqrt(pi) exp(-Z*r)
   double npn = 1.0/(Z*dr);
+  int npout = 20 * np;
   double exact_norm2 = 0.0;
-  for ( int i = npn; i < 10*np; i++ )
+  for ( int i = npn; i < npout; i++ )
   {
     double r = dr * i;
     double t = r * (sqrt(Z*Z*Z)/sqrt(M_PI)) * exp(-Z*r);
@@ -100,7 +101,7 @@ double vsetb(int Z, double a, double& b)
     assert(iter<200);
     // compute normalization factor of phi(r)
     double sum = 0.0;
-    for ( int i = 0; i < 10*np; i++ )
+    for ( int i = 0; i < npout; i++ )
     {
       double r = dr * i;
       double t = r * phi(Z,a,b,r);
@@ -110,7 +111,7 @@ double vsetb(int Z, double a, double& b)
 
     // compute norm2 of normalized phi outside of r=1/Z
     pseudo_norm2 = 0.0;
-    for ( int i = npn; i < 10*np; i++ )
+    for ( int i = npn; i < npout; i++ )
     {
       double r = dr * i;
       double t = r * fac * phi(Z,a,b,r);
