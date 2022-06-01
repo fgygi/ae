@@ -36,6 +36,15 @@ int main(int argc, char **argv)
   // output XML potential file
   const double dr = 0.002/Z;
   int np = 501;
+  // adjust np so that v(r) = -Z/r at r=(np-)*dr
+  while ( fabs(v(Z,a,b,(np-1)*dr)+Z/((np-1)*dr)) > 1.e-10 )
+  {
+    np += 100;
+    assert(np<=10001);
+  }
+
+  cerr << "Z=" << Z << "a =" << a << " b=" << b << endl;
+  cerr << "rmax=" << (np-1)*dr << " np=" << np << endl;
 
   cout.setf(ios::scientific,ios::floatfield);
   cout << setprecision(10);
