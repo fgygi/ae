@@ -43,7 +43,7 @@ int main(int argc, char **argv)
     assert(np<=10001);
   }
 
-  cerr << "Z=" << Z << "a =" << a << " b=" << b << endl;
+  cerr << "Z=" << Z << " a=" << a << " b=" << b << endl;
   cerr << "rmax=" << (np-1)*dr << " np=" << np << endl;
 
   cout.setf(ios::scientific,ios::floatfield);
