@@ -34,11 +34,12 @@ int main(int argc, char **argv)
   int iarg = 1;
   int Z = atoi(argv[iarg++]);
   double a = atof(argv[iarg++]);
-  double b = 0.0;
+  double b = -Z/(a*sqrt(M_PI));
   if ( argc == 7 )
     b = atof(argv[iarg++]);
   else
     vsetb(Z,a,b);
+  double c = czab(Z,a,b);
 
   int l = atoi(argv[iarg++]);
   double rmax = atof(argv[iarg++]);
@@ -47,7 +48,7 @@ int main(int argc, char **argv)
   const double h = hZ/Z;
   const int np = (int)(rmax/h);
   rmax = h*(np+1);
-  cout << " Z = " << Z << " a = " << a << " b = " << b
+  cout << " Z = " << Z << " a = " << a << " b = " << b << " c = " << c
        << " l = " << l << endl;
   cout << " rmax = " << rmax << " hZ = " << h*Z << endl;
   cout << " np = " << np << " h = " << h << endl;
@@ -63,7 +64,7 @@ int main(int argc, char **argv)
   for ( int i = 0; i < np; i++ )
   {
     r[i] = (i+1)*h;
-    vext[i] = v(Z,a,b,r[i]);
+    vext[i] = v(Z,a,b,c,r[i]);
   }
 
   //////////////////////////////////////////////////////////////////////////////

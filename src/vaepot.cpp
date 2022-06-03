@@ -19,25 +19,39 @@ using namespace std;
 
 int main(int argc, char **argv)
 {
-  if ( !(argc == 3 || argc == 4) )
+  if ( argc == 1 )
   {
-    cerr << "Use: v Z a [b]" << endl;
+    cerr << "Use: v Z a [b] [c]" << endl;
     return 1;
   }
   int Z = atoi(argv[1]);
   double a = atof(argv[2]);
-  double b = 0.0;
+
+  double b = - Z / ( a * sqrt(M_PI) );
+  if ( argc > 3 )
+    b = atof(argv[3]);
+  else
+    vsetb(Z,a,b);
+
+  double c = czab(Z,a,b);
+  if ( argc > 4 )
+    c = atof(argv[4]);
+
   double fac = 1.0;
+#if 0
   if ( argc == 4 )
     b = atof(argv[3]);
   else
     fac = vsetb(Z,a,b);
+#endif
 
+  cerr << "a=" << a << " b=" << b << " c=" << c << endl;
+  cerr << "czab=" << czab(Z,a,b) << endl;
   // output XML potential file
   const double dr = 0.002/Z;
   int np = 501;
   // adjust np so that v(r) = -Z/r at r=(np-)*dr
-  while ( fabs(v(Z,a,b,(np-1)*dr)+Z/((np-1)*dr)) > 1.e-10 )
+  while ( fabs(v(Z,a,b,c,(np-1)*dr)+Z/((np-1)*dr)) > 1.e-10 )
   {
     np += 100;
     assert(np<=10001);
@@ -73,7 +87,7 @@ int main(int argc, char **argv)
   for ( int i = 0; i < np; i++ )
   {
     double r = dr * i;
-    cout << v(Z,a,b,r) << endl;
+    cout << v(Z,a,b,c,r) << endl;
   }
   cout << "</radial_potential>" << endl;
 
@@ -81,7 +95,7 @@ int main(int argc, char **argv)
   for ( int i = 0; i < np; i++ )
   {
     double r = dr * i;
-    cout << fac*phi(Z,a,b,r) << endl;
+    cout << fac*phi(Z,a,b,c,r) << endl;
   }
   cout << "</radial_function>" << endl;
   cout << "</projector>" << endl;

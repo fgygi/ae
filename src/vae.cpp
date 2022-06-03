@@ -11,53 +11,56 @@
 #include <iostream>
 using namespace std;
 
-const double xi = 1.0;
+////////////////////////////////////////////////////////////////////////////////
+double czab(int Z, double a, double b)
+{
+  const double x = a*Z/sqrt(M_PI);
+  return 2.5*a*a + a*a*b + 2.0*x -
+         0.5*sqrt( (75.0*a*a*a*a + 30.0*a*a*a*a*b + 80.0*a*a*x ) / 3.0 );
+}
 
 ////////////////////////////////////////////////////////////////////////////////
-double h(int Z, double a, double b, double r)
+double h(int Z, double a, double b, double c, double r)
+{
+  return -Z*r*erf(a*r) + ( b + c * r*r ) * exp(-a*a*r*r);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+double hp(int Z, double a, double b, double c, double r)
+{
+  const double a2r2 = a*a*r*r;
+  const double x = a*Z/sqrt(M_PI);
+  return -Z*erf(a*r) + 2.0*( c*(1.0-a2r2) - a*a*b - a*Z/sqrt(M_PI) ) *
+          r * exp(-a2r2);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+double hpp(int Z, double a, double b, double c, double r)
 {
   double a2r2 = a*a*r*r;
-  const double inv_spi = 1.0/sqrt(M_PI);
-  return -Z*r*erf(a*r) - xi*Z*inv_spi/a * exp(-a2r2)
-         + b*r*r*exp(-a2r2);
+  const double x = a*Z/sqrt(M_PI);
+  return ( 2.0*c - 2.0*a*a*b - 4.0*x +
+           ( 4.0*a*a*a*a*b-10.0*a*a*c+4.0*a*a*x )*r*r +
+           4.0*a2r2*a2r2*c ) * exp(-a2r2);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-double hp(int Z, double a, double b, double r)
+double phi(int Z, double a, double b, double c, double r)
 {
-  double a2r2 = a*a*r*r;
-  const double inv_spi = 1.0/sqrt(M_PI);
-  return -Z*erf(a*r) + 2.0*a*Z*r*inv_spi * (xi - 1.0) * exp(-a2r2)
-         + (2.0*b*r*(1.0-a2r2)) * exp(-a2r2);
+  return exp(h(Z,a,b,c,r));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-double hpp(int Z, double a, double b, double r)
-{
-  double a2r2 = a*a*r*r;
-  const double inv_spi = 1.0/sqrt(M_PI);
-  return   -2*Z*a*inv_spi * ( 2.0 + 2.0*a2r2*(xi-1.0) - xi ) * exp(-a2r2)
-         + (2.0*b*(1.0-5.0*a2r2+2.0*a2r2*a2r2)) * exp(-a2r2);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-double phi(int Z, double a, double b, double r)
-{
-  return exp(h(Z,a,b,r));
-}
-
-////////////////////////////////////////////////////////////////////////////////
-double v(int Z, double a, double b, double r)
+double v(int Z, double a, double b, double c, double r)
 {
   if ( r == 0.0 )
   {
-    const double inv_spi = 1.0/sqrt(M_PI);
-    return -0.5*Z*Z + 3.0*a*Z*inv_spi * (xi - 2.0) + 3.0*b;
+    return -0.5*Z*Z + 3.0*c - 3.0*a*a*b - 6.0*a*Z/sqrt(M_PI);
   }
   else
   {
-    double hpval = hp(Z,a,b,r);
-    return -0.5*Z*Z + hpval/r + 0.5*hpval*hpval + 0.5*hpp(Z,a,b,r);
+    double hpval = hp(Z,a,b,c,r);
+    return -0.5*Z*Z + hpval/r + 0.5*hpval*hpval + 0.5*hpp(Z,a,b,c,r);
   }
 }
 
@@ -66,11 +69,12 @@ double v(int Z, double a, double b, double r)
 // return the 2-norm of the phi_10 function for parameters Z,a,b
 double vsetb(int Z, double a, double& b)
 {
-  b = 0.0;
+  b = -Z/(a*sqrt(M_PI));
+  double c = czab(Z,a,b);
   const double dr = 0.002/Z;
   int np = 501;
   // adjust np so that v(r) = -Z/r at r=(np-)*dr
-  while ( fabs(v(Z,a,b,(np-1)*dr)+Z/((np-1)*dr)) > 1.e-10 )
+  while ( fabs(v(Z,a,b,c,(np-1)*dr)+Z/((np-1)*dr)) > 1.e-10 )
   {
     np += 100;
     assert(np<=10001);
@@ -104,7 +108,7 @@ double vsetb(int Z, double a, double& b)
     for ( int i = 0; i < npout; i++ )
     {
       double r = dr * i;
-      double t = r * phi(Z,a,b,r);
+      double t = r * phi(Z,a,b,c,r);
       sum += t*t*dr;
     }
     fac = 1.0 / sqrt(4.0*M_PI*sum);
@@ -114,12 +118,13 @@ double vsetb(int Z, double a, double& b)
     for ( int i = npn; i < npout; i++ )
     {
       double r = dr * i;
-      double t = r * fac * phi(Z,a,b,r);
+      double t = r * fac * phi(Z,a,b,c,r);
       pseudo_norm2 += t*t*dr;
     }
     pseudo_norm2 *= 4 * M_PI;
     if ( fabs(pseudo_norm2-exact_norm2) > epsilon )
       b = finder.next(b,pseudo_norm2-exact_norm2);
+      c = czab(Z,a,b);
   }
   cerr << "Pseudo norm2 in [1/Z,infinity]: " << pseudo_norm2
        << " b=" << b << endl;
