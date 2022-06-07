@@ -68,7 +68,8 @@ int main(int argc, char **argv)
   cout << "xsi:schemaLocation=\"http://www.quantum-simulation.org/ns/fpmd/fpmd-1.0 species.xsd\">" << endl;
   cout << "<description>" << endl;
   cout << "  Analytic regularized all-electron potential" << endl;
-  cout << "  Z=" << Z << " a=" << a << " b=" << b << " dr=" << dr << endl;
+  cout << "  Z=" << Z << " a=" << a << " b=" << b << " c=" << c
+       << " dr=" << dr << endl;
   cout << "</description>" << endl;
   cout << "<symbol>X</symbol>" << endl;
   cout << "<atomic_number>" << Z << "</atomic_number>" << endl;
