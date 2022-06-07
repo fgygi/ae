@@ -84,11 +84,13 @@ double vsetb(int Z, double a, double& b)
   // Normalized exact solution is Z^(3/2)/sqrt(pi) exp(-Z*r)
   double npn = 1.0/(Z*dr);
   int npout = 20 * np;
-  double exact_norm2 = 0.0;
-  for ( int i = npn; i < npout; i++ )
+  double r = dr*npn;
+  double t = r * (sqrt(Z*Z*Z)/sqrt(M_PI)) * exp(-Z*r);
+  double exact_norm2 = 0.5*t*t*dr;
+  for ( int i = npn+1; i < npout; i++ )
   {
-    double r = dr * i;
-    double t = r * (sqrt(Z*Z*Z)/sqrt(M_PI)) * exp(-Z*r);
+    r = dr * i;
+    t = r * (sqrt(Z*Z*Z)/sqrt(M_PI)) * exp(-Z*r);
     exact_norm2 += t*t*dr;
   }
   exact_norm2 *= 4 * M_PI;
@@ -107,21 +109,26 @@ double vsetb(int Z, double a, double& b)
     double sum = 0.0;
     for ( int i = 0; i < npout; i++ )
     {
-      double r = dr * i;
-      double t = r * phi(Z,a,b,c,r);
+      r = dr * i;
+      t = r * phi(Z,a,b,c,r);
       sum += t*t*dr;
     }
     fac = 1.0 / sqrt(4.0*M_PI*sum);
 
     // compute norm2 of normalized phi outside of r=1/Z
-    pseudo_norm2 = 0.0;
-    for ( int i = npn; i < npout; i++ )
+    // trapezoidal rule: first point with weight 0.5
+    r = dr*npn;
+    t = r * fac * phi(Z,a,b,c,r);
+    pseudo_norm2 = 0.5*t*t*dr;
+    for ( int i = npn+1; i < npout; i++ )
     {
-      double r = dr * i;
-      double t = r * fac * phi(Z,a,b,c,r);
+      r = dr * i;
+      t = r * fac * phi(Z,a,b,c,r);
       pseudo_norm2 += t*t*dr;
     }
     pseudo_norm2 *= 4 * M_PI;
+    //cerr << "pseudo_norm2-exact_norm2="
+    //     << pseudo_norm2-exact_norm2 << endl;
     if ( fabs(pseudo_norm2-exact_norm2) > epsilon )
       b = finder.next(b,pseudo_norm2-exact_norm2);
       c = czab(Z,a,b);
@@ -129,4 +136,38 @@ double vsetb(int Z, double a, double& b)
   cerr << "Pseudo norm2 in [1/Z,infinity]: " << pseudo_norm2
        << " b=" << b << endl;
   return fac;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// norm2 of pseudofunction outside of 1/Z
+double psnorm2(int Z, double a, double b)
+{
+  double c = czab(Z,a,b);
+  int np = 501;
+  const double dr = 0.002/Z;
+  int npout = 20 * np;
+  // compute normalization factor of phi(r)
+  double r,t;
+  double sum = 0.0;
+  for ( int i = 0; i < npout; i++ )
+  {
+    r = dr * i;
+    t = r * phi(Z,a,b,c,r);
+    sum += t*t*dr;
+  }
+  const double fac = 1.0 / sqrt(4.0*M_PI*sum);
+
+  // compute norm2 of normalized phi outside of r=1/Z
+  double npn = 1.0/(Z*dr);
+  r = npn*dr;
+  t = r * fac * phi(Z,a,b,c,r);
+  double pseudo_norm2 = 0.5*t*t*dr;
+  for ( int i = npn+1; i < npout; i++ )
+  {
+    r = dr * i;
+    t = r * fac * phi(Z,a,b,c,r);
+    pseudo_norm2 += t*t*dr;
+  }
+  pseudo_norm2 *= 4 * M_PI;
+  return pseudo_norm2;
 }
