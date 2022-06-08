@@ -14,9 +14,9 @@ using namespace std;
 ////////////////////////////////////////////////////////////////////////////////
 double czab(int Z, double a, double b)
 {
-  const double x = a*Z/sqrt(M_PI);
-  return 2.5*a*a + a*a*b + 2.0*x -
-         0.5*sqrt( (75.0*a*a*a*a + 30.0*a*a*a*a*b + 80.0*a*a*x ) / 3.0 );
+  const double x = Z/(a*sqrt(M_PI));
+  return a * a * ( 2.5 + b + 2.0 * x -
+         0.5 * sqrt( 25.0 + 10.0 * b + 80.0 * x / 3.0 ) );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -29,7 +29,6 @@ double h(int Z, double a, double b, double c, double r)
 double hp(int Z, double a, double b, double c, double r)
 {
   const double a2r2 = a*a*r*r;
-  const double x = a*Z/sqrt(M_PI);
   return -Z*erf(a*r) + 2.0*( c*(1.0-a2r2) - a*a*b - a*Z/sqrt(M_PI) ) *
           r * exp(-a2r2);
 }
@@ -37,10 +36,12 @@ double hp(int Z, double a, double b, double c, double r)
 ////////////////////////////////////////////////////////////////////////////////
 double hpp(int Z, double a, double b, double c, double r)
 {
-  double a2r2 = a*a*r*r;
-  const double x = a*Z/sqrt(M_PI);
-  return ( 2.0*c - 2.0*a*a*b - 4.0*x +
-           ( 4.0*a*a*a*a*b-10.0*a*a*c+4.0*a*a*x )*r*r +
+  double a2 = a*a;
+  double a4 = a2*a2;
+  double a2r2 = a2*r*r;
+  const double x = Z/(a*sqrt(M_PI));
+  return ( 2.0*c - 2.0*a2*b - 4.0*a2*x +
+           ( 4.0*a4*b-10.0*a2*c+4.0*a4*x )*r*r +
            4.0*a2r2*a2r2*c ) * exp(-a2r2);
 }
 
