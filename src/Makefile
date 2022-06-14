@@ -14,6 +14,9 @@ LDFLAGS = $(LIBPATH) $(LIBS)
 aecheck: aecheck.o nradsolve.o vae.o
 	$(LD) -o $@ $^ $(LDFLAGS)
 
+aecheck_erf: aecheck_erf.o nradsolve.o
+	$(LD) -o $@ $^ $(LDFLAGS)
+
 vaepot: vaepot.o vae.o
 	$(LD) -o $@ $^ $(LDFLAGS)
 
