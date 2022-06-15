@@ -3,10 +3,10 @@
 //  aecheck.cpp
 //  Solve the non-interacting problem in a regularized potential
 //
-//  Input: Z, a, [b optional], l, rmax, hZ
+//  Input: Z, a, [b], l, rmax, hZ
 //  Z: atomic number
 //  a,b, parameters of the regularized potential. If b is missing,
-//  it is calculated by enforcing norm-conservation of the 1s state
+//  it is calculated by enforcing norm conservation of the 1s state
 //  l: angular momentum
 //  hZ: produce of mesh spacing times Z (typical values: 0.0002 - 0.002)
 //
@@ -25,7 +25,7 @@ using namespace std;
 
 int main(int argc, char **argv)
 {
-  // use: aecheck Z a [b] rmax np
+  // use: aecheck Z a [b] l rmax hZ
   if ( !(argc == 6 || argc == 7) )
   {
     cerr << " use: aecheck Z a [b] l rmax hZ" << endl;
