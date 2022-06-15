@@ -52,12 +52,6 @@ int main(int argc, char **argv)
   cout << " rmax = " << rmax << " hZ = " << h*Z << endl;
   cout << " np = " << np << " h = " << h << endl;
 
-  // generate potential
-  // np = number of mesh points
-  // double h = 0.002/Z;
-  // double rmax = (np+1)*h;
-  cout << " rmax = " << rmax << endl;
-
   valarray<double> r(np);
   valarray<double> vext(np);
   for ( int i = 0; i < np; i++ )
