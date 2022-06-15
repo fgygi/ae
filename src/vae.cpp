@@ -22,8 +22,6 @@ double czab(int Z, double a, double b)
   const double cp = a * a * ( 2.5 + b + 2.0 * x + 0.5 * s );
   assert( fabs(cm) < fabs(cp) );
   return cm;
-  //return a * a * ( 2.5 + b + 2.0 * x -
-  //       0.5 * sqrt( 25.0 + 10.0 * b + 80.0 * x / 3.0 ) );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -73,58 +71,24 @@ double v(int Z, double a, double b, double c, double r)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// adjust b to enforce norm conservation
-// return the normalization factor fac of phi=exp(h(r))
-// such that fac*exp(h(r)) is normalized
 void vsetb(int Z, double a, double& b)
 {
-  b = 0.0;
-  double c = czab(Z,a,b);
-  const double dr = 0.002/Z;
-  int np = 501;
-  // adjust np so that v(r) = -Z/r at r=(np-)*dr
-  while ( fabs(v(Z,a,b,c,(np-1)*dr)+Z/((np-1)*dr)) > 1.e-10 )
-  {
-    np += 100;
-    assert(np<=10001);
-  }
-
-  int npout = 20 * np;
-
-  // phi(Z,a,b,c,r) converges to the correct value phi_exact(r) by
-  // construction.
-  // phi(Z,a,b,c,r) = sqrt(Z*Z*Z/M_PI)*exp(-Z*r)
-
-  // Adjust b to enforce norm conservation at r=1/Z
+  // Adjust b to enforce norm conservation
   RootFinder finder(0.1);
-  double pseudo_norm2 = 0.0;
   int iter = 0;
   const double epsilon = 1.e-6;
+  double pseudo_norm2 = psnorm2(Z,a,b);
   while ( fabs(pseudo_norm2-1.0) > epsilon )
   {
     iter++;
     assert(iter<200);
-    // compute pseudo_norm2
-    double sum = 0.0;
-    for ( int i = 0; i < npout; i++ )
-    {
-      double r = dr * i;
-      double t = r * phi(Z,a,b,c,r);
-      sum += t*t*dr;
-    }
-    pseudo_norm2 = 4 * M_PI * sum;
-    // cerr << "pseudo_norm2: " << pseudo_norm2 << endl;
-
-    if ( fabs(pseudo_norm2-1.0) > epsilon )
-    {
-      b = finder.next(b,pseudo_norm2-1.0);
-      c = czab(Z,a,b);
-    }
+    b = finder.next(b,pseudo_norm2-1.0);
+    pseudo_norm2 = psnorm2(Z,a,b);
   }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// norm2 of pseudofunction
+// pseudofunction 2-norm
 double psnorm2(int Z, double a, double b)
 {
   double c = czab(Z,a,b);
