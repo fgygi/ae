@@ -31,7 +31,7 @@ double verf(int Z, double a, double r)
 
 int main(int argc, char **argv)
 {
-  // use: aecheck_erf Z a rmax np
+  // use: aecheck_erf Z a l rmax hZ
   if ( !(argc == 6 ) )
   {
     cerr << " use: aecheck_erf Z a l rmax hZ" << endl;
