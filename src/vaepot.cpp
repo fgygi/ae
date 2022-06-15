@@ -26,22 +26,15 @@ int main(int argc, char **argv)
   }
   int Z = atoi(argv[1]);
   double a = atof(argv[2]);
-
   double b;
   if ( argc > 3 )
     b = atof(argv[3]);
   else
-  {
-    b = - Z / ( a * sqrt(M_PI) );
     vsetb(Z,a,b);
-  }
-  cerr << "psnorm2=" << psnorm2(Z,a,b) << endl;
 
   double c = czab(Z,a,b);
   if ( argc > 4 )
     c = atof(argv[4]);
-
-  double fac = 1.0;
 
   cerr << "a=" << a << " b=" << b << " c=" << c << endl;
   cerr << "czab=" << czab(Z,a,b) << endl;
@@ -94,7 +87,7 @@ int main(int argc, char **argv)
   for ( int i = 0; i < np; i++ )
   {
     double r = dr * i;
-    cout << fac*phi(Z,a,b,c,r) << endl;
+    cout << phi(Z,a,b,c,r) << endl;
   }
   cout << "</radial_function>" << endl;
   cout << "</projector>" << endl;

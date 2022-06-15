@@ -13,6 +13,6 @@ double hp(int Z, double a, double b, double c, double r);
 double hpp(int Z, double a, double b, double c, double r);
 double phi(int Z, double a, double b, double c, double r);
 double v(int Z, double a, double b, double c, double r);
-double vsetb(int Z, double a, double& b);
+void vsetb(int Z, double a, double& b);
 double psnorm2(int Z, double a, double b);
 #endif

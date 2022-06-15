@@ -6,7 +6,7 @@
 //  Input: Z, a, [b optional], l, rmax, hZ
 //  Z: atomic number
 //  a,b, parameters of the regularized potential. If b is missing,
-//  it is calculated by enforcing norm-conservation of the 1s state at r=1/Z
+//  it is calculated by enforcing norm-conservation of the 1s state
 //  l: angular momentum
 //  hZ: produce of mesh spacing times Z (typical values: 0.0002 - 0.002)
 //
