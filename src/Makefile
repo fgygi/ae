@@ -11,6 +11,8 @@ LIBS = -llapack -lblas
  
 LDFLAGS = $(LIBPATH) $(LIBS) 
 
+all: vaepot aecheck aecheck_erf
+
 aecheck: aecheck.o nradsolve.o vae.o
 	$(LD) -o $@ $^ $(LDFLAGS)
 
@@ -21,8 +23,4 @@ vaepot: vaepot.o vae.o
 	$(LD) -o $@ $^ $(LDFLAGS)
 
 clean:
-	rm -f vaepot aecheck *.o 
-# generate dependencies in makefile: use -Y to avoid library header files
- depend :
-	makedepend -Y *.[cCh]
-# DO NOT DELETE
+	rm -f vaepot aecheck aecheck_erf *.o
