@@ -1,11 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
 //
-// generate analytic hydrogen pseudopotential
+// Generate analytic regularized Coulomb pseudopotential
 //
-// use: v Z a [b]
+// use: v Z a [b [c]]
 //
 // If not provided, the parameter b is determined by enforcing
-// norm-conservation at r=1/Z
+// norm-conservation. The parameter c is determined by enforcing
+// zero curvature of V(r) at r=0
 //
 ////////////////////////////////////////////////////////////////////////////////
 #include<iostream>
@@ -21,7 +22,7 @@ int main(int argc, char **argv)
 {
   if ( argc == 1 )
   {
-    cerr << "Use: v Z a [b] [c]" << endl;
+    cerr << "Use: vaepot Z a [b [c]]" << endl;
     return 1;
   }
   int Z = atoi(argv[1]);
@@ -36,9 +37,7 @@ int main(int argc, char **argv)
   if ( argc > 4 )
     c = atof(argv[4]);
 
-  cerr << "a=" << a << " b=" << b << " c=" << c << endl;
-  cerr << "czab=" << czab(Z,a,b) << endl;
-  // output XML potential file
+  cerr << "Z=" << Z << " a=" << a << " b=" << b << " c=" << c << endl;
   const double dr = 0.002/Z;
   int np = 501;
   // adjust np so that v(r) = -Z/r at r=(np-)*dr
@@ -47,10 +46,9 @@ int main(int argc, char **argv)
     np += 100;
     assert(np<=10001);
   }
-
-  cerr << "Z=" << Z << " a=" << a << " b=" << b << endl;
   cerr << "rmax=" << (np-1)*dr << " np=" << np << endl;
 
+  // output XML potential file
   cout.setf(ios::scientific,ios::floatfield);
   cout << setprecision(10);
 
