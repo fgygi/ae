@@ -27,7 +27,7 @@ int main(int argc, char **argv)
   }
   int Z = atoi(argv[1]);
   double a = atof(argv[2]);
-  double b;
+  double b = -Z/(a*sqrt(M_PI));
   if ( argc > 3 )
     b = atof(argv[3]);
   else
