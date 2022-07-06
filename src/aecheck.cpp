@@ -38,8 +38,8 @@ int main(int argc, char **argv)
   if ( argc == 7 )
     b = atof(argv[iarg++]);
   else
-    vsetb(Z,a,b);
-  double c = czab(Z,a,b);
+    vsetb(a,b);
+  double c = cab(a,b);
 
   int l = atoi(argv[iarg++]);
   double rmax = atof(argv[iarg++]);

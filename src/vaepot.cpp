@@ -18,10 +18,13 @@
 #include "vae.h"
 using namespace std;
 
+const char *const version = "v3.0";
+
 int main(int argc, char **argv)
 {
   if ( argc == 1 )
   {
+    cerr << "vaepot " << version << endl;
     cerr << "Use: vaepot Z a [b [c]]" << endl;
     return 1;
   }
@@ -31,9 +34,9 @@ int main(int argc, char **argv)
   if ( argc > 3 )
     b = atof(argv[3]);
   else
-    vsetb(Z,a,b);
+    vsetb(a,b);
 
-  double c = czab(Z,a,b);
+  double c = cab(a,b);
   if ( argc > 4 )
     c = atof(argv[4]);
 
@@ -58,7 +61,7 @@ int main(int argc, char **argv)
   cout << "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"" << endl;
   cout << "xsi:schemaLocation=\"http://www.quantum-simulation.org/ns/fpmd/fpmd-1.0 species.xsd\">" << endl;
   cout << "<description>" << endl;
-  cout << "  Analytic regularized all-electron potential" << endl;
+  cout << "  Analytic regularized all-electron potential " << version << endl;
   cout << "  Z=" << Z << " a=" << a << " b=" << b << " c=" << c
        << " dr=" << dr << endl;
   cout << "</description>" << endl;

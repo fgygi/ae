@@ -26,7 +26,7 @@ vaepot: vaepot.o vae.o
 sinft.o: sinft.cpp
 	$(CXX) -I$(FFTWDIR)/api -DUSE_FFTW3 -c $^
 
-vfour: vfour.o sinft.o
+vaefour: vaefour.o sinft.o
 	$(LD) -o $@ -I$(FFTWDIR)/api -DUSE_FFTW3 $^ -L$(FFTWDIR)/.libs -lfftw3
 
 gfour: gfour.o sinft.o
