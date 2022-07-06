@@ -7,7 +7,6 @@
 #ifndef VAE_H
 #define VAE_H
 #include <cmath>
-double czab(int Z, double a, double b);
 double cab(double a, double b);
 double h1(double a, double b, double c, double r);
 double h1p(double a, double b, double c, double r);
