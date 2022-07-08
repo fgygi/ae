@@ -34,7 +34,7 @@ int main(int argc, char **argv)
   int iarg = 1;
   int Z = atoi(argv[iarg++]);
   double a = atof(argv[iarg++]);
-  double b = -Z/(a*sqrt(M_PI));
+  double b = -1.0/(a*sqrt(M_PI));
   if ( argc == 7 )
     b = atof(argv[iarg++]);
   else
