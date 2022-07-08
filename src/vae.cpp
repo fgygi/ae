@@ -16,8 +16,10 @@ double cab(double a, double b)
 {
   // find value of c that enforces zero-curvature of V at r=0
   const double x = 1.0/(a*sqrt(M_PI));
+  const double arg = 25.0 + 10.0 * b + 80.0 * x / 3.0;
+  assert(arg>=0.0);
+  const double s = sqrt( arg );
   // compute both roots cm, cp
-  const double s = sqrt( 25.0 + 10.0 * b + 80.0 * x / 3.0 ) ;
   const double cm = a * a * ( 2.5 + b + 2.0 * x - 0.5 * s );
   const double cp = a * a * ( 2.5 + b + 2.0 * x + 0.5 * s );
   assert( fabs(cm) < fabs(cp) );
