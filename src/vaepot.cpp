@@ -18,7 +18,7 @@
 #include "vae.h"
 using namespace std;
 
-const char *const version = "v3.0";
+const char *const version = "v3.1";
 
 int main(int argc, char **argv)
 {
