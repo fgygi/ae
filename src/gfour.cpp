@@ -9,18 +9,16 @@ using namespace std;
 #include "sinft.h"
 
 // f(r) = exp(-a^2 * r^2)
-const double a = 1.5;
-
-double f(double r)
+double f(double a, double r)
 {
-  const double a = 1.5;
   return exp(-a*a*r*r);
 }
 
 double simpsn ( int n, double *t );
 
-int main()
+int main(int argc, char **argv)
 {
+  const double a = atof(argv[1]);
   int np = 500;
   double h = 0.02;
 
@@ -30,7 +28,7 @@ int main()
   for ( int i = 0; i < np; i++ )
   {
     double r = h * i;
-    fint[i] = 4.0 * M_PI * r * r * f(r);
+    fint[i] = 4.0 * M_PI * r * r * f(a,r);
   }
   double vq0 = h * simpsn(np,&fint[0]);
 
@@ -38,7 +36,7 @@ int main()
   for ( int i = 0; i < np; i++ )
   {
     double r = h * i;
-    v[i] = 4.0 * M_PI * r * f(r) * h;
+    v[i] = 4.0 * M_PI * r * f(a,r) * h;
   }
   for ( int i = 0; i < np; i++ )
     cout << i*h << " " << v[i] << endl;
