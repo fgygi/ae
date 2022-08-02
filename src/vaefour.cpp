@@ -71,15 +71,47 @@ int main(int argc, char **argv)
   sinft(np,&f[0]);
 
   // plot q^2 * ( V(q) + Verf(q) )
-  cout << 0 << " " << fq0 << endl;
   for ( int i = 0; i < np; i++ )
   {
     double q = i * M_PI / (h * np);
-    //cout << q << " " << f[i]/q << endl;
+    // v_q is f[i]/q
     double q2_v_q = q * f[i];
     double q2_verf_q = 4 * M_PI * exp(-q*q/(4*a*a));
     cout << q << " " << q2_v_q + q2_verf_q << endl;
   }
+  cout << endl << endl;
+
+  // 1s wave function
+  for ( int i = 0; i < np; i++ )
+  {
+    double r = h * i;
+    cout << r << " " << phi(Z,a,b,c,r) << endl;
+  }
+  cout << endl << endl;
+
+  for ( int i = 0; i < np; i++ )
+  {
+    double r = h * i;
+    f[i] = 4.0 * M_PI * r * h * phi(Z,a,b,c,r);
+  }
+  // q=0 integral
+  for ( int i = 0; i < np; i++ )
+  {
+    double r = h * i;
+    fint[i] = f[i] * r;
+  }
+  fq0 = simpsn(np,&fint[0]);
+
+  sinft(np,&f[0]);
+
+  // phi(q)
+  cout << 0 << " " << fq0 << endl;
+  for ( int i = 1; i < np; i++ )
+  {
+    double q = i * M_PI / (h * np);
+    cout << q << " " << f[i]/q << endl;
+  }
+  cout << endl << endl;
 
 #if 0
   // reference gaussian
