@@ -28,6 +28,7 @@ int main(int argc, char **argv)
   if ( argc < 2 )
   {
     cerr << " Use: vaefour a [b [c] ]" << endl;
+    return 1;
   }
   int np = 1000;
   const int Z = 1;
