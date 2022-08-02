@@ -25,10 +25,14 @@ double simpsn ( int n, double *t );
 
 int main(int argc, char **argv)
 {
-  int np = 500;
+  if ( argc < 2 )
+  {
+    cerr << " Use: vaefour a [b [c] ]" << endl;
+  }
+  int np = 1000;
   const int Z = 1;
-  double h = 0.02;
   double a = atof(argv[1]);
+  double h = 0.02/a;
   double b = -1.0/(a*sqrt(M_PI));
   vsetb(a,b);
   double c = cab(a,b);
