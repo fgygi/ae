@@ -1,6 +1,9 @@
 //
 // vaefour.cpp
-// Fourier transform of an AE potential
+// Fourier transform of an AEPW potential
+// Output:
+//  plot of Vae(r)
+//  plot of q^2 * Vae(q)
 //
 #include<iostream>
 #include<vector>
@@ -9,13 +12,13 @@ using namespace std;
 #include "sinft.h"
 #include "vae.h"
 
-// f(r) = exp(-a^2 * r^2)
-const double a = 1.5;
-
-double f(double r)
+// verf(Z,a,r) = -Z * erf(a*r)/r
+double verf(int Z, double a, double r)
 {
-  const double a = 1.5;
-  return exp(-a*a*r*r);
+  if ( r == 0.0 )
+    // M_2_SQRTPI = 2 / sqrt(pi)
+    return -a * Z * M_2_SQRTPI;
+  return -Z*erf(a*r)/r;
 }
 
 double simpsn ( int n, double *t );
@@ -23,44 +26,52 @@ double simpsn ( int n, double *t );
 int main(int argc, char **argv)
 {
   int np = 500;
+  const int Z = 1;
   double h = 0.02;
   double a = atof(argv[1]);
-  double b,c;
   double b = -1.0/(a*sqrt(M_PI));
   vsetb(a,b);
-  c = cab(a,b);
+  double c = cab(a,b);
+
+  // plot Vae(r)
+  for ( int i = 0; i < np; i++ )
+  {
+    double r = h * i;
+    cout << r << " " << v(Z,a,b,c,r) << endl;
+  }
+  cout << endl << endl;
 
   vector<double> f(np),fint(np);
-
+  // compute Fourier ( vae(r)-verf(r) ) + Fourier ( verf(r) )
+  for ( int i = 0; i < np; i++ )
+  {
+    double r = h * i;
+    f[i] = 4.0 * M_PI * r * h * ( v(Z,a,b,c,r) - verf(Z,a,r) );
+  }
   // q=0 integral
   for ( int i = 0; i < np; i++ )
   {
     double r = h * i;
-    fint[i] = 4.0 * M_PI * r * r * phi1(a,b,c,r);
+    fint[i] = f[i] * r;
   }
-  double fq0 = h * simpsn(np,&fint[0]);
-
-  // f(q)
-  for ( int i = 0; i < np; i++ )
-  {
-    double r = h * i;
-    f[i] = 4.0 * M_PI * r * phi1(a,b,c,r) * h;
-  }
-  for ( int i = 0; i < np; i++ )
-    cout << i*h << " " << f[i] << endl;
-  cout << endl << endl;
+  double fq0 = simpsn(np,&fint[0]);
 
   sinft(np,&f[0]);
 
+  // plot q^2 * ( V(q) + Verf(q) )
   cout << 0 << " " << fq0 << endl;
-  for ( int i = 1; i < np; i++ )
+  for ( int i = 0; i < np; i++ )
   {
     double q = i * M_PI / (h * np);
-    cout << q << " " << f[i]/q << endl;
+    //cout << q << " " << f[i]/q << endl;
+    double q2_v_q = q * f[i];
+    double q2_verf_q = 4 * M_PI * exp(-q*q/(4*a*a));
+    cout << q << " " << q2_v_q + q2_verf_q << endl;
   }
 
 #if 0
-  // reference
+  // reference gaussian
+  // v(r) = exp(-a^2 r^2)
   // v(q) = v(q=0)*exp(-q^2/(4 a^2))
   // v(q=0) = 4 pi int r^2 exp(-a^2 r^2) dr = pi^(3/2) / a^3
   cout << endl << endl;
