@@ -34,8 +34,15 @@ int main(int argc, char **argv)
   double a = atof(argv[1]);
   double h = 0.02/a;
   double b = -1.0/(a*sqrt(M_PI));
-  vsetb(a,b);
+  if ( argc > 2 )
+    b = atof(argv[2]);
+  else
+    vsetb(a,b);
   double c = cab(a,b);
+  if ( argc > 3 )
+    c = atof(argv[3]);
+
+  cerr << "Z=" << Z << " a=" << a << " b=" << b << " c=" << c << endl;
 
   // plot Vae(r)
   for ( int i = 0; i < np; i++ )
