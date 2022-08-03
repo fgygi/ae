@@ -14,7 +14,9 @@
 #include<iostream>
 #include<vector>
 #include<cmath>
+#include<cstdlib>
 #include<cstring>
+#include<cassert>
 using namespace std;
 #include "sinft.h"
 #include "vae.h"
