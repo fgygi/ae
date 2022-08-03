@@ -17,6 +17,7 @@
 #include "nradsolve.h"
 #include <cmath>
 #include <cstdlib>
+#include <cstring>
 #include <cassert>
 #include <valarray>
 #include <iostream>

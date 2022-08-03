@@ -14,6 +14,7 @@
 #include<iomanip>
 #include<cmath>
 #include<cstdlib>
+#include<cstring>
 #include<cassert>
 #include "RootFinder.h"
 #include "vae.h"
