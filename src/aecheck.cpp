@@ -3,12 +3,13 @@
 //  aecheck.cpp
 //  Solve the non-interacting problem in a regularized potential
 //
-//  Input: Z, a, [b], l, rmax, hZ
+//  Use: aecheck [-zc] Z, a, l, rmax, hZ
+//  If -zc is used, zero-curvature of V(r) is enforced at r=0
 //  Z: atomic number
-//  a,b, parameters of the regularized potential. If b is missing,
-//  it is calculated by enforcing norm conservation of the 1s state
+//  a parameter of the regularized potential
+//  The b parameter is calculated by enforcing norm conservation of the 1s state
 //  l: angular momentum
-//  hZ: produce of mesh spacing times Z (typical values: 0.0002 - 0.002)
+//  hZ: product of mesh spacing times Z (typical values: 0.0002 - 0.002)
 //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -23,23 +24,40 @@
 #include <fstream>
 using namespace std;
 
+const char *const version = "v4.0";
+
 int main(int argc, char **argv)
 {
-  // use: aecheck Z a [b] l rmax hZ
+  // use: aecheck [-zc] Z a l rmax hZ
   if ( !(argc == 6 || argc == 7) )
   {
-    cerr << " use: aecheck Z a [b] l rmax hZ" << endl;
+    cerr << "aecheck " << version << endl;
+    cerr << "Use: aecheck [-zc] Z a l rmax hZ" << endl;
     return 1;
   }
+  bool zc = false;
+  double c = 0.0;
   int iarg = 1;
+  if ( !strcmp(argv[iarg],"-zc") )
+  {
+    assert(argc==7);
+    // impose zero-curvature condition at r=0
+    zc = true;
+    iarg++;
+  }
   int Z = atoi(argv[iarg++]);
   double a = atof(argv[iarg++]);
+  // initial value of b
   double b = -1.0/(a*sqrt(M_PI));
-  if ( argc == 7 )
-    b = atof(argv[iarg++]);
+
+  if ( zc )
+  {
+    vsetbc(a,b,c);
+  }
   else
+  {
     vsetb(a,b);
-  double c = cab(a,b);
+  }
 
   int l = atoi(argv[iarg++]);
   double rmax = atof(argv[iarg++]);
@@ -48,6 +66,8 @@ int main(int argc, char **argv)
   const double h = hZ/Z;
   const int np = (int)(rmax/h);
   rmax = h*(np+1);
+
+  cout << " aecheck " << version << endl;
   cout << " Z = " << Z << " a = " << a << " b = " << b << " c = " << c
        << " l = " << l << endl;
   cout << " rmax = " << rmax << " hZ = " << h*Z << endl;

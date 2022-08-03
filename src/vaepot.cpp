@@ -2,11 +2,12 @@
 //
 // Generate analytic regularized Coulomb pseudopotential
 //
-// use: v Z a [b [c]]
+// use: vaepot [-zc] Z a
 //
-// If not provided, the parameter b is determined by enforcing
-// norm-conservation. The parameter c is determined by enforcing
-// zero curvature of V(r) at r=0
+// The parameter b is determined by enforcing norm-conservation.
+// The default value of parameter c is 0
+// If the -zc option is used, the parameter c is determined by enforcing
+// zero curvature of V(r) at r=0.
 //
 ////////////////////////////////////////////////////////////////////////////////
 #include<iostream>
@@ -18,28 +19,41 @@
 #include "vae.h"
 using namespace std;
 
-const char *const version = "v3.1";
+const char *const version = "v4.0";
 
 int main(int argc, char **argv)
 {
-  if ( argc == 1 )
+  if ( !(argc == 3 || argc == 4) )
   {
     cerr << "vaepot " << version << endl;
-    cerr << "Use: vaepot Z a [b [c]]" << endl;
+    cerr << "Use: vaepot [-zc] Z a" << endl;
     return 1;
   }
-  int Z = atoi(argv[1]);
-  double a = atof(argv[2]);
+  bool zc = false;
+  double c = 0.0;
+  int iarg = 1;
+  if ( !strcmp(argv[iarg],"-zc") )
+  {
+    assert(argc==4);
+    // impose zero-curvature condition at r=0
+    zc = true;
+    iarg++;
+  }
+  int Z = atoi(argv[iarg++]);
+  double a = atof(argv[iarg++]);
+  // initial value of b
   double b = -1.0/(a*sqrt(M_PI));
-  if ( argc > 3 )
-    b = atof(argv[3]);
+
+  if ( zc )
+  {
+    vsetbc(a,b,c);
+  }
   else
+  {
     vsetb(a,b);
+  }
 
-  double c = cab(a,b);
-  if ( argc > 4 )
-    c = atof(argv[4]);
-
+  cerr << "vaepot " << version << endl;
   cerr << "Z=" << Z << " a=" << a << " b=" << b << " c=" << c << endl;
   const double dr = 0.002/Z;
   int np = 501;

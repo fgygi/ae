@@ -21,4 +21,6 @@ double v1(double a, double b, double c, double r);
 double v(int Z, double a, double b, double c, double r);
 void vsetb(double a, double& b);
 double psnorm2(double a, double b);
+void vsetbc(double a, double& b, double& c);
+double psnorm2_c0(double a, double b);
 #endif

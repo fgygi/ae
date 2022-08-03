@@ -103,9 +103,10 @@ double v(int Z, double a, double b, double c, double r)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void vsetb(double a, double& b)
+void vsetbc(double a, double& b, double& c)
 {
-  // Adjust b to enforce norm conservation
+  // Adjust b and c to enforce norm conservation and
+  // zero curvature of V(r) at r=0
   RootFinder finder(0.1);
   int iter = 0;
   const double epsilon = 1.e-10;
@@ -117,12 +118,14 @@ void vsetb(double a, double& b)
     b = finder.next(b,pseudo_norm2-1.0);
     pseudo_norm2 = psnorm2(a,b);
   }
+  c = cab(a,b);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // pseudofunction 2-norm
 double psnorm2(double a, double b)
 {
+  // Adjust b to enforce norm conservation with c adjusted for zero curvature
   double c = cab(a,b);
   int np = 1000;
   const double dr = 0.001;
@@ -132,6 +135,41 @@ double psnorm2(double a, double b)
   {
     double r = dr * i;
     double t = r * phi1(a,b,c,r);
+    sum += t*t*dr;
+  }
+  return 4 * M_PI * sum;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void vsetb(double a, double& b)
+{
+  // Adjust b to enforce norm conservation with c = 0
+  RootFinder finder(0.1);
+  int iter = 0;
+  const double epsilon = 1.e-10;
+  double pseudo_norm2 = psnorm2_c0(a,b);
+  while ( fabs(pseudo_norm2-1.0) > epsilon )
+  {
+    iter++;
+    assert(iter<200);
+    b = finder.next(b,pseudo_norm2-1.0);
+    pseudo_norm2 = psnorm2_c0(a,b);
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// pseudofunction 2-norm with c = 0
+double psnorm2_c0(double a, double b)
+{
+  // use c = 0
+  int np = 1000;
+  const double dr = 0.001;
+  int npout = 20 * np;
+  double sum = 0.0;
+  for ( int i = 0; i < npout; i++ )
+  {
+    double r = dr * i;
+    double t = r * phi1(a,b,0.0,r);
     sum += t*t*dr;
   }
   return 4 * M_PI * sum;

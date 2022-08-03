@@ -1,10 +1,16 @@
+////////////////////////////////////////////////////////////////////////////////
 //
 // vaefour.cpp
 // Fourier transform of an AEPW potential
+// Use: vaefour [-zc] a
+// if -zc: impose zero-curvature of V(r) at r=0
 // Output:
 //  plot of Vae(r)
 //  plot of q^2 * Vae(q)
+//  plot of rho_1s(r)
+//  plot of rho_1s(q)
 //
+////////////////////////////////////////////////////////////////////////////////
 #include<iostream>
 #include<vector>
 #include<cmath>
@@ -23,26 +29,44 @@ double verf(int Z, double a, double r)
 
 double simpsn ( int n, double *t );
 
+const char *const version = "v4.0";
+
 int main(int argc, char **argv)
 {
   if ( argc < 2 )
   {
-    cerr << " Use: vaefour a [b [c] ]" << endl;
+    cerr << "vaefour " << version << endl;
+    cerr << "Use: vaefour [-zc] a" << endl;
     return 1;
   }
   int np = 1000;
-  const int Z = 1;
-  double a = atof(argv[1]);
-  double h = 0.02/a;
+  bool zc = false;
+  double c = 0.0;
+  int iarg = 1;
+  if ( !strcmp(argv[iarg],"-zc") )
+  {
+    assert(argc==3);
+    // impose zero-curvature condition at r=0
+    zc = true;
+    iarg++;
+  }
+  int Z = 1;
+  double a = atof(argv[iarg++]);
+  // initial value of b
   double b = -1.0/(a*sqrt(M_PI));
-  if ( argc > 2 )
-    b = atof(argv[2]);
-  else
-    vsetb(a,b);
-  double c = cab(a,b);
-  if ( argc > 3 )
-    c = atof(argv[3]);
 
+  if ( zc )
+  {
+    vsetbc(a,b,c);
+  }
+  else
+  {
+    vsetb(a,b);
+  }
+
+  double h = 0.02/a;
+
+  cerr << "vaefour " << version << endl;
   cerr << "Z=" << Z << " a=" << a << " b=" << b << " c=" << c << endl;
 
   // plot Vae(r)
@@ -81,7 +105,7 @@ int main(int argc, char **argv)
   }
   cout << endl << endl;
 
-  // 1s wave function
+  // 1s density
   for ( int i = 0; i < np; i++ )
   {
     double r = h * i;
@@ -92,7 +116,8 @@ int main(int argc, char **argv)
   for ( int i = 0; i < np; i++ )
   {
     double r = h * i;
-    f[i] = 4.0 * M_PI * r * h * phi(Z,a,b,c,r);
+    double ph = phi(Z,a,b,c,r);
+    f[i] = 4.0 * M_PI * r * h * ph * ph;
   }
   // q=0 integral
   for ( int i = 0; i < np; i++ )
@@ -104,7 +129,7 @@ int main(int argc, char **argv)
 
   sinft(np,&f[0]);
 
-  // phi(q)
+  // rho(q)
   cout << 0 << " " << fq0 << endl;
   for ( int i = 1; i < np; i++ )
   {
