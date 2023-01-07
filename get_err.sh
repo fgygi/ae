@@ -1,6 +1,6 @@
 #!/bin/bash
 # get error from aecheck output
-# use: ./get_err.sh file.dat
+# use: ./get_err.sh file.out
 for n in E_2 E_3 E_4 E_5
 do
   echo '# ' $n
