@@ -38,3 +38,12 @@ Note: the error due to finite hZ is still ~ 0.00000050 at hZ=0.0005
 
 Eigenvalues at a = 80 are converged within 1.e-6 Hartree
 --------------------------------------------------------------------------------
+H_s redone with rmax=100, hZ=0.0001 to get improved accuracy
+H_d redone with rmax=100, hZ=0.0001 to get improved accuracy
+--------------------------------------------------------------------------------
+Using b=0: do not impose the norm conservation condition
+aecheck.cpp version 4.1 has an optional b parameter
+results in H_s_b0.dat, H_p_b0.dat, H_d_b0.dat
+Error decrease is O(a**-3) in H_s_b0.dat, O(a**-3.5) in H_p_b0.dat, 
+and O(a**-5.5) in H_d_b0.dat.
+--------------------------------------------------------------------------------
