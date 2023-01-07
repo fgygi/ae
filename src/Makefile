@@ -12,12 +12,15 @@ LIBS = -llapack -lblas
  
 LDFLAGS = $(LIBPATH) $(LIBS) 
 
-all: vaepot aecheck aecheck_erf
+all: vaepot aecheck aecheck_erf aecheck_erfgau
 
 aecheck: aecheck.o nradsolve.o vae.o
 	$(LD) -o $@ $^ $(LDFLAGS)
 
 aecheck_erf: aecheck_erf.o nradsolve.o
+	$(LD) -o $@ $^ $(LDFLAGS)
+
+aecheck_erfgau: aecheck_erfgau.o nradsolve.o
 	$(LD) -o $@ $^ $(LDFLAGS)
 
 vaepot: vaepot.o vae.o
