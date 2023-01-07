@@ -162,8 +162,8 @@ void vsetb(double a, double& b)
 double psnorm2_c0(double a, double b)
 {
   // use c = 0
-  int np = 1000;
-  const double dr = 0.001;
+  int np = 2000;
+  const double dr = 0.0005;
   int npout = 20 * np;
   double sum = 0.0;
   for ( int i = 0; i < npout; i++ )
