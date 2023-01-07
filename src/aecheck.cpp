@@ -3,11 +3,13 @@
 //  aecheck.cpp
 //  Solve the non-interacting problem in a regularized potential
 //
-//  Use: aecheck [-zc] Z, a, l, rmax, hZ
+//  Use: aecheck [-zc] Z a l rmax hZ
+//  Use: aecheck Z a [b] l rmax hZ
 //  If -zc is used, zero-curvature of V(r) is enforced at r=0
 //  Z: atomic number
 //  a parameter of the regularized potential
-//  The b parameter is calculated by enforcing norm conservation of the 1s state
+//  b parameter: optional
+//  default: b parameter is set by enforcing norm conservation of the 1s state
 //  l: angular momentum
 //  hZ: product of mesh spacing times Z (typical values: 0.0002 - 0.002)
 //
@@ -25,15 +27,15 @@
 #include <fstream>
 using namespace std;
 
-const char *const version = "v4.0";
+const char *const version = "v4.1";
 
 int main(int argc, char **argv)
 {
-  // use: aecheck [-zc] Z a l rmax hZ
   if ( !(argc == 6 || argc == 7) )
   {
     cerr << "aecheck " << version << endl;
     cerr << "Use: aecheck [-zc] Z a l rmax hZ" << endl;
+    cerr << "Use: aecheck Z a [b] l rmax hZ" << endl;
     return 1;
   }
   bool zc = false;
@@ -50,14 +52,23 @@ int main(int argc, char **argv)
   double a = atof(argv[iarg++]);
   // initial value of b
   double b = -1.0/(a*sqrt(M_PI));
-
-  if ( zc )
+  // optional b value argument
+  if ( !zc && argc==7 )
   {
-    vsetbc(a,b,c);
+    // b optional argument present
+    b = atof(argv[iarg++]);
+    // do not set b using vset(a,b)
   }
   else
   {
-    vsetb(a,b);
+    if ( zc )
+    {
+      vsetbc(a,b,c);
+    }
+    else
+    {
+      vsetb(a,b);
+    }
   }
 
   int l = atoi(argv[iarg++]);
