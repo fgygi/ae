@@ -6,6 +6,7 @@
 
 #ifndef VAE_H
 #define VAE_H
+const char *const version = "v4.1";
 #include <cmath>
 double cab(double a, double b);
 double h1(double a, double b, double c, double r);

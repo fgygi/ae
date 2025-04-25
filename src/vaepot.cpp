@@ -20,8 +20,6 @@
 #include "vae.h"
 using namespace std;
 
-const char *const version = "v4.0";
-
 int main(int argc, char **argv)
 {
   if ( !(argc == 3 || argc == 4) )

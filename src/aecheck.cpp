@@ -27,8 +27,6 @@
 #include <fstream>
 using namespace std;
 
-const char *const version = "v4.1";
-
 int main(int argc, char **argv)
 {
   if ( !(argc == 6 || argc == 7) )

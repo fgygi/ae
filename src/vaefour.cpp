@@ -32,8 +32,6 @@ double verf(int Z, double a, double r)
 
 double simpsn ( int n, double *t );
 
-const char *const version = "v4.0";
-
 int main(int argc, char **argv)
 {
   if ( argc < 2 )
